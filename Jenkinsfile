@@ -2,33 +2,28 @@ node{
    stage('SCM Checkout'){
      git 'https://github.com/damodaranj/my-app.git'
    }
-   stage('Compile-Package'){
-
+   stage('Maven stage'){
       def mvnHome =  tool name: 'maven3', type: 'maven'   
       sh "${mvnHome}/bin/mvn clean package"
 	  sh 'mv target/myweb*.war target/newapp.war'
-   }
-   stage('SonarQube Analysis') {
-	        def mvnHome =  tool name: 'maven3', type: 'maven'
-	        withSonarQubeEnv('sonar') { 
-	          sh "${mvnHome}/bin/mvn sonar:sonar"
-	        }
-	    }
-   stage('Build Docker Imager'){
-   sh 'docker build -t saidamo/myweb:0.0.2 .'
-   }
-   stage('Docker Image Push'){
-   withCredentials([string(credentialsId: 'dockerPass', variable: 'dockerPassword')]) {
-   sh "docker login -u saidamo -p ${dockerPassword}"
     }
-   sh 'docker push saidamo/myweb:0.0.2'
+    stage('Remove Previous Image'){
+        sh 'docker rmi -f 606a15f6933b f66b7f5ac535 2554d8c5a112 cc0f411710e8 cdd517ede416'
+    }
+    stage('Build Docker Imager'){
+      sh 'docker build -t dkdeepak/myweb:1.0.2 .'
+}
+    stage('Docker Image Push'){
+         withCredentials([string(credentialsId: 'dockerPass', variable: 'dockerPassword')]) {
+      sh "docker login -u dkdeepak -p ${dockerPassword}"
+    }
+   sh 'docker push dkdeepak/myweb:1.0.2'
    }
-  stage('Nexus Image Push'){
-   sh "docker login -u admin -p admin123 3.109.144.225:8083"
-   sh "docker tag saidamo/myweb:0.0.2 3.109.144.225:8083/damo:1.0.0"
-   sh 'docker push 3.109.144.225:8083/damo:1.0.0'
+   stage('Nexus Image Push'){
+   sh "docker login -u admin -p admin1234 13.233.138.84:8082"
+   sh "docker tag dkdeepak/myweb:1.0.2 13.233.138.84:8082/app:1.0.0"
+   sh 'docker push 13.233.138.84:8082/app:1.0.0'
    }
-
    stage('Remove Previous Container'){
 	try{
 		sh 'docker rm -f tomcattest'
@@ -36,7 +31,7 @@ node{
 		//  do nothing if there is an exception
 	}
    stage('Docker deployment'){
-   sh 'docker run -d -p 8090:8080 --name tomcattest saidamo/myweb:0.0.2' 
-   }
+   sh 'docker run -d -p 8090:8080 --name tomcattest dkdeepak/myweb:1.0.2' 
+}
 }
 }
