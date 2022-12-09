@@ -8,7 +8,7 @@ node{
 	  sh 'mv target/myweb*.war target/newapp.war'
     }
     stage('Remove Previous Image'){
-        sh 'docker rmi -f d8a508e29ae7 8e8802045910'
+        sh 'docker rmi -f d8a508e29ae7'
     }
     stage('Build Docker Imager'){
       sh 'docker build -t dkdeepak/myweb:1.0.2 .'
