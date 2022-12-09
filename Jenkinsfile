@@ -1,6 +1,6 @@
 node{
    stage('Checkout'){
-     git 'https://github.com/damodaranj/my-app.git'
+     git 'https://github.com/Deepak080196/my-app.git'
    }
    stage('Maven stage'){
       def mvnHome =  tool name: 'maven3', type: 'maven'   
