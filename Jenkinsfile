@@ -1,5 +1,5 @@
 node{
-   stage('Checkout'){
+   stage('SCM Checkout'){
      git 'https://github.com/Deepak080196/my-app.git'
    }
    stage('Maven stage'){
@@ -8,11 +8,11 @@ node{
 	  sh 'mv target/myweb*.war target/newapp.war'
     }
     stage('Remove Previous Image'){
-        sh 'docker rmi -f 606a15f6933b f66b7f5ac535 2554d8c5a112 cc0f411710e8 cdd517ede416'
+        sh 'docker rmi -f dc8553f32bfe 83c70617b343 848f68e440e2 91a223319d4d afbebe2470a4 58c357f6b0f6 975d203df1b8 85002b1bcbe1'
     }
     stage('Build Docker Imager'){
       sh 'docker build -t dkdeepak/myweb:1.0.2 .'
-}
+    }
     stage('Docker Image Push'){
          withCredentials([string(credentialsId: 'dockerPass', variable: 'dockerPassword')]) {
       sh "docker login -u dkdeepak -p ${dockerPassword}"
@@ -32,6 +32,6 @@ node{
 	}
    stage('Docker deployment'){
    sh 'docker run -d -p 8090:8080 --name tomcattest dkdeepak/myweb:1.0.2' 
-}
-}
+   }
+ }
 }
