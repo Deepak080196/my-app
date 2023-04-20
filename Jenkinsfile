@@ -2,6 +2,15 @@ node{
    stage('SCM Checkout'){
      git 'https://github.com/Deepak080196/my-app.git'
    }
+	stage('Maven stage'){
+      def mvnHome =  tool name: 'maven3', type: 'maven'   
+      sh "${mvnHome}/bin/mvn clean package"
+	  sh 'mv target/myweb*.war target/newapp.war'
+    }
+stage('Remove Previous Image'){
+        sh 'docker rmi -f d8a508e29ae7'
+    }
+
    
     
     stage('Build Docker Imager'){
