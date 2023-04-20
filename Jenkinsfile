@@ -3,9 +3,7 @@ node{
      git 'https://github.com/Deepak080196/my-app.git'
    }
    
-    stage('Remove Previous Image'){
-        sh 'docker rmi -f d8a508e29ae7'
-    }
+    
     stage('Build Docker Imager'){
       sh 'docker build -t dkdeepak/myweb:1.0.2 .'
     }
